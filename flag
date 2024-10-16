@@ -1,0 +1,34 @@
+import numpy as np
+
+# For left_only_df
+left_only_df['flag'] = np.where(
+    (left_only_df['p'].isna()) & (left_only_df['s'].isna()) & (left_only_df['_merge'] == 'left_only'), 
+    'fresh claims', 
+    np.where(
+        (left_only_df['p'] == 1) & (left_only_df['s'] == 0), 
+        'bounceoff available', 
+        'other'  # Fallback if neither condition is met, you can adjust this as needed
+    )
+)
+
+# For both_df
+both_df['flag'] = np.where(
+    (both_df['p'] == 1) & (both_df['s'] == 1) & (both_df['_merge'] == 'both'),
+    'in rad',
+    np.where(
+        (both_df['p'] == 1) & (both_df['s'] == 1) & (both_df['_merge'] == 'both'),
+        'not in rad',
+        'other'  # Fallback if neither condition is met, you can adjust this as needed
+    )
+)
+
+# Optional: Drop the '_merge' column if it's no longer needed
+left_only_df = left_only_df.drop(columns=['_merge'])
+both_df = both_df.drop(columns=['_merge'])
+
+# Check results
+print("Left Only DataFrame with Flag:")
+print(left_only_df.head())
+
+print("\nBoth DataFrame with Flag:")
+print(both_df.head())
